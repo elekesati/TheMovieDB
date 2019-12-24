@@ -1,6 +1,10 @@
 package com.example.themoviedb;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -16,8 +20,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import static android.app.Activity.RESULT_OK;
+
 public class FragmentRegister extends Fragment {
     private static final String TAG = "MovieRegister";
+    private static final int PICK_IMAGE = 1;
+    private static final int MAX_SIZE = 200;
 
     private EditText editTextUsername;
     private EditText editTextPassword;
@@ -28,7 +36,7 @@ public class FragmentRegister extends Fragment {
     private Button buttonRegister;
     private Button buttonAddProfilePicture;
 
-    private ImageView imageViewPrfilePicture;
+    private ImageView imageViewProfilePicture;
 
     private DatabaseHelper databaseHelper;
 
@@ -45,13 +53,10 @@ public class FragmentRegister extends Fragment {
         editTextUsername = view.findViewById(R.id.editText_Register_Username);
         editTextPassword = view.findViewById(R.id.editText_Register_Password);
         editTextPasswordAgain = view.findViewById(R.id.editText_Register_PasswordAgain);
-
         checkBoxShowPassword = view.findViewById(R.id.checkBox_Register_ShowPassword);
-
         buttonRegister = view.findViewById(R.id.button_Register_SignUp);
         buttonAddProfilePicture = view.findViewById(R.id.button_Register_AddProfilePicture);
-
-        imageViewPrfilePicture = view.findViewById(R.id.imageView_Register_ProfilePicture);
+        imageViewProfilePicture = view.findViewById(R.id.imageView_Register_ProfilePicture);
 
         databaseHelper = new DatabaseHelper(getContext());
 
@@ -60,39 +65,9 @@ public class FragmentRegister extends Fragment {
             checkBoxShowPassword.setChecked(savedInstanceState.getBoolean("checked"));
         }
 
-        checkBoxShowPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b){
-                    editTextPassword.setTransformationMethod(null);
-                    editTextPasswordAgain.setTransformationMethod(null);
-                }
-                else{
-                    editTextPassword.setTransformationMethod(new PasswordTransformationMethod());
-                    editTextPasswordAgain.setTransformationMethod(new PasswordTransformationMethod());
-                }
-            }
-        });
-
-        buttonRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (editTextPassword.getText().toString().equals(editTextPasswordAgain.getText().toString())){
-                    Profile profile = new Profile(
-                            editTextUsername.getText().toString(),
-                            editTextPassword.getText().toString(),
-                            ((BitmapDrawable)imageViewPrfilePicture.getDrawable()).getBitmap()
-                    );
-                    databaseHelper.register(profile);
-                    Toast.makeText(getContext(), "Register successful", Toast.LENGTH_LONG).show();
-
-                    ((MainActivity) getActivity()).replaceFragment(MainActivity.FRAGMENT_HOME);
-                }
-                else{
-                    Toast.makeText(getContext(), "Check password!", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        checkBoxShowPassword.setOnCheckedChangeListener(onCheckedChangeListener);
+        buttonRegister.setOnClickListener(onClickListenerForRegisterButton);
+        buttonAddProfilePicture.setOnClickListener(onClickListenerForPictureButton);
 
         return view;
     }
@@ -102,5 +77,75 @@ public class FragmentRegister extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putString("username", editTextUsername.getText().toString());
         outState.putBoolean("checked", checkBoxShowPassword.isChecked());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
+            Uri selectedImage = data.getData();
+            imageViewProfilePicture.setImageURI(selectedImage);
+        }
+    }
+
+    private CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener(){
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            if (b){
+                editTextPassword.setTransformationMethod(null);
+                editTextPasswordAgain.setTransformationMethod(null);
+            }
+            else{
+                editTextPassword.setTransformationMethod(new PasswordTransformationMethod());
+                editTextPasswordAgain.setTransformationMethod(new PasswordTransformationMethod());
+            }
+        }
+    };
+
+    private View.OnClickListener onClickListenerForRegisterButton = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (editTextPassword.getText().toString().equals(editTextPasswordAgain.getText().toString())){
+                Profile profile = new Profile(
+                        editTextUsername.getText().toString(),
+                        editTextPassword.getText().toString(),
+                        scaleProfilePicture());
+                databaseHelper.register(profile);
+                MainActivity.currentUser = editTextUsername.getText().toString();
+                Toast.makeText(getContext(), "Register successful", Toast.LENGTH_LONG).show();
+
+                ((MainActivity) getActivity()).replaceFragment(MainActivity.FRAGMENT_HOME);
+            }
+            else{
+                Toast.makeText(getContext(), "Check password!", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+    private View.OnClickListener onClickListenerForPictureButton = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+        }
+    };
+
+    private Bitmap scaleProfilePicture(){
+        Bitmap image = ((BitmapDrawable) imageViewProfilePicture.getDrawable()).getBitmap();
+        int width = image.getWidth();
+        int height = image.getHeight();
+        float ratio = (float) width/height;
+
+        if (ratio > 1){
+            width = MAX_SIZE;
+            height = (int) (width / ratio);
+        }
+        else{
+            height = MAX_SIZE;
+            width = (int) (height * ratio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 }

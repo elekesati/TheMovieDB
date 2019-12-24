@@ -24,16 +24,19 @@ public class MainActivity extends AppCompatActivity {
 
     public static FragmentManager mFragmentManager;
 
+    public static String currentUser;
+
     private Fragment loginFragment = new FragmentLogin();
     private Fragment registerFragment = new FragmentRegister();
     private Fragment homeFragment = new FragmentHome();
+    private Fragment profileFragment = new FragmentProfile();
 
     private BottomNavigationView mBottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_continer);
+        setContentView(R.layout.fragment_container);
 
         mFragmentManager = getSupportFragmentManager();
 
@@ -62,17 +65,19 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         case R.id.favorites:
                             Log.d(TAG, "Go to favorites");
-                            mFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_container, homeFragment, null)
-                                .commit();
+                            //TODO
                             break;
                         case R.id.home:
                             Log.d(TAG, "Go to home");
-                            //TODO
+                            mFragmentManager.beginTransaction()
+                                    .replace(R.id.fragment_container, homeFragment, null)
+                                    .commit();
                             break;
                         case R.id.profile:
-                            Log.d(TAG, "profile");
-                            //TODO
+                            Log.d(TAG, "Go to profile");
+                            mFragmentManager.beginTransaction()
+                                    .replace(R.id.fragment_container, profileFragment, null)
+                                    .commit();
                             break;
                     }
                     return false;
@@ -118,7 +123,9 @@ public class MainActivity extends AppCompatActivity {
                 //TODO
                 break;
             case FRAGMENT_PROFILE:
-                //TODO
+                mFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, profileFragment, null)
+                        .commit();
                 break;
         }
     }

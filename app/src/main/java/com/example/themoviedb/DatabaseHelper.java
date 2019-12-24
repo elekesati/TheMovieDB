@@ -39,6 +39,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(profile.getId())});
     }
 
+    public Profile getProfile(){
+        Log.d(TAG, "Get profile for " + MainActivity.currentUser);
+        String[] selectionArgs = new String[]{MainActivity.currentUser};
+        String[] projection = new String[]{Profile.COLUMN_ID,
+                Profile.COLUMN_USERNAME,
+                Profile.COLUMN_PASSWORD,
+                Profile.COLUMN_PROFILE_PICTURE};
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(Profile.TABLE_NAME,
+                projection,
+                Profile.COLUMN_USERNAME + " =?", selectionArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            Profile profile = new Profile(cursor.getInt(cursor.getColumnIndex(Profile.COLUMN_ID)),
+                    MainActivity.currentUser,
+                    cursor.getString(cursor.getColumnIndex(Profile.COLUMN_PASSWORD)),
+                    cursor.getBlob(cursor.getColumnIndex(Profile.COLUMN_PROFILE_PICTURE)));
+
+            cursor.close();
+            return profile;
+        }
+
+        return null;
+    }
+
     public Boolean login(String username, String password){
         Log.d(TAG, "Logging in: " + username);
         String[] selectionArgs = new String[]{username, password};
@@ -48,12 +74,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.query(Profile.TABLE_NAME,
                 projection,
                 Profile.COLUMN_USERNAME + " =? AND " + Profile.COLUMN_PASSWORD + "=?", selectionArgs, null, null, null);
+
         if (cursor.moveToFirst()) {
             cursor.close();
             return true;
         }
-        return false;
 
+        return false;
     }
 
     public long register(Profile profile) {

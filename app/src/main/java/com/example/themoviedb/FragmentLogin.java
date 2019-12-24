@@ -46,31 +46,8 @@ public class FragmentLogin extends Fragment {
             checkBoxShowPassword.setChecked(savedInstanceState.getBoolean("checked"));
         }
 
-        checkBoxShowPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b){
-                    editTextPassword.setTransformationMethod(null);
-                }
-                else{
-                    editTextPassword.setTransformationMethod(new PasswordTransformationMethod());
-                }
-            }
-        });
-
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (databaseHelper.login(editTextUsername.getText().toString(), editTextPassword.getText().toString())){
-                    Toast.makeText(getContext(), "Log in successful!", Toast.LENGTH_LONG).show();
-
-                    ((MainActivity) getActivity()).replaceFragment(MainActivity.FRAGMENT_HOME);
-                }
-                else{
-                    Toast.makeText(getContext(), "Incorrect username or password!", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        checkBoxShowPassword.setOnCheckedChangeListener(onCheckedChangeListener);
+        buttonLogin.setOnClickListener(onClickListener);
 
         return view;
     }
@@ -81,4 +58,31 @@ public class FragmentLogin extends Fragment {
         outState.putString("username", editTextUsername.getText().toString());
         outState.putBoolean("checked", checkBoxShowPassword.isChecked());
     }
+
+    private CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            if (b){
+                editTextPassword.setTransformationMethod(null);
+            }
+            else{
+                editTextPassword.setTransformationMethod(new PasswordTransformationMethod());
+            }
+        }
+    };
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+        if (databaseHelper.login(editTextUsername.getText().toString(), editTextPassword.getText().toString())){
+            MainActivity.currentUser = editTextUsername.getText().toString();
+            Toast.makeText(getContext(), "Log in successful!", Toast.LENGTH_LONG).show();
+
+            ((MainActivity) getActivity()).replaceFragment(MainActivity.FRAGMENT_HOME);
+        }
+        else{
+            Toast.makeText(getContext(), "Incorrect username or password!", Toast.LENGTH_LONG).show();
+        }
+        }
+    };
 }
