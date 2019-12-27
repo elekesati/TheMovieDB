@@ -83,7 +83,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public long register(Profile profile) {
+    public void register(Profile profile) {
         Log.d(TAG, "Registering");
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -94,6 +94,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long id = db.insert(Profile.TABLE_NAME, null, values);
 
         db.close();
-        return id;
     }
 }

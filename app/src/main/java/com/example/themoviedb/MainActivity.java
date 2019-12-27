@@ -84,8 +84,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            mFragmentManager.beginTransaction()
+            /*mFragmentManager.beginTransaction()
                     .add(R.id.fragment_container, new FragmentLogin(), null)
+                    .commit();*/
+            mFragmentManager.beginTransaction()
+                    .add(R.id.fragment_container, new FragmentHome(), null)
                     .commit();
         }
     }
