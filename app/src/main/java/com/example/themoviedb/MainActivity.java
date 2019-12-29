@@ -25,11 +25,13 @@ public class MainActivity extends AppCompatActivity {
     public static FragmentManager mFragmentManager;
 
     public static String currentUser;
+    public static int currentUserID;
 
     private Fragment loginFragment = new FragmentLogin();
     private Fragment registerFragment = new FragmentRegister();
     private Fragment homeFragment = new FragmentHome();
     private Fragment profileFragment = new FragmentProfile();
+    private Fragment favouritesFragment = new FragmentFavourites();
 
     private BottomNavigationView mBottomNavigationView;
 
@@ -65,7 +67,9 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         case R.id.favorites:
                             Log.d(TAG, "Go to favorites");
-                            //TODO
+                            mFragmentManager.beginTransaction()
+                                    .replace(R.id.fragment_container, favouritesFragment, null)
+                                    .commit();
                             break;
                         case R.id.home:
                             Log.d(TAG, "Go to home");
@@ -84,11 +88,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            /*mFragmentManager.beginTransaction()
-                    .add(R.id.fragment_container, new FragmentLogin(), null)
-                    .commit();*/
             mFragmentManager.beginTransaction()
-                    .add(R.id.fragment_container, new FragmentHome(), null)
+                    .add(R.id.fragment_container, new FragmentLogin(), null)
                     .commit();
         }
     }
@@ -123,13 +124,31 @@ public class MainActivity extends AppCompatActivity {
                         .commit();
                 break;
             case FRAGMENT_FAVORITES:
-                //TODO
+                mFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, favouritesFragment, null)
+                        .commit();
                 break;
             case FRAGMENT_PROFILE:
                 mFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, profileFragment, null)
                         .commit();
                 break;
+        }
+    }
+
+    public static void showDetails(Movie movie){
+        mFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, new FragmentDetails(movie), null)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            this.finish();
+        } else {
+            getSupportFragmentManager().popBackStack();
         }
     }
 }

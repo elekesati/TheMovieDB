@@ -16,41 +16,43 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieViewHolder> {
-    private static final String TAG = "MovieList";
+public class RelatedListAdapter extends RecyclerView.Adapter<RelatedListAdapter.RelatedViewHolder> {
+    private static final String TAG = "MovieRelatedList";
 
     List<Movie> movies;
     Context context;
 
-    public class MovieViewHolder extends RecyclerView.ViewHolder{
+    public class RelatedViewHolder extends RecyclerView.ViewHolder {
         public CardView cardView;
 
-        public MovieViewHolder(@NonNull View view) {
+        public RelatedViewHolder(@NonNull View view) {
             super(view);
-            this.cardView = view.findViewById(R.id.cardView_ListItem);
+            this.cardView = view.findViewById(R.id.cardView_RelatedItem);
         }
     }
 
-    public MovieListAdapter(List<Movie> movies, Context context){
+    public RelatedListAdapter(List<Movie> movies, Context context) {
         this.movies = movies;
         this.context = context;
     }
 
     @NonNull
     @Override
-    public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RelatedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.d(TAG, "Creating view holder");
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_list_item, parent, false);
-        return new MovieListAdapter.MovieViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.related_movie_item, parent, false);
+        return new RelatedListAdapter.RelatedViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RelatedViewHolder holder, int position) {
         Log.d(TAG, "Binding view holder");
-        ((TextView) holder.cardView.findViewById(R.id.textView_ListItem_Title)).
+        ((TextView) holder.cardView.findViewById(R.id.textView_Related_Title)).
                 setText(movies.get(position).getTitle());
-        ((TextView) holder.cardView.findViewById(R.id.textView_ListItem_Overview)).
-                setText(movies.get(position).getOverview());
+
+        Glide.with(context).
+                load("https://image.tmdb.org/t/p/w500" + movies.get(position).getPosterPath()).
+                into((ImageView) holder.cardView.findViewById(R.id.imageView_Related_Image));
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,10 +60,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
                 MainActivity.showDetails(movies.get(position));
             }
         });
-
-        Glide.with(context).
-                load("https://image.tmdb.org/t/p/w500" + movies.get(position).getPosterPath()).
-                into((ImageView) holder.cardView.findViewById(R.id.imageView_ListItem_Poster));
     }
 
     @Override

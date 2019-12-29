@@ -11,6 +11,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ public class FragmentHome extends Fragment {
     private MovieListAdapter adapter;
 
     private Call<Page> call;
+    private String searchQuery;
 
     public FragmentHome() {
     }
@@ -35,6 +37,7 @@ public class FragmentHome extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         ((MainActivity) getActivity()).setBottomNavigationMenu(MainActivity.MENU_MAIN);
@@ -43,12 +46,18 @@ public class FragmentHome extends Fragment {
         recyclerViewResults = view.findViewById(R.id.recyclerView_Home_SearchResults);
         textViewTitle = view.findViewById(R.id.textView_Home_Title);
 
-        loadPopularMovies();
+        if (searchQuery == null || searchQuery.isEmpty()){
+            loadPopularMovies();
+        }
+        else{
+            searchMovie(searchQuery);
+        }
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 textViewTitle.setText(R.string.search_results);
+                searchQuery = query;
                 searchMovie(query);
                 return true;
             }
@@ -63,11 +72,14 @@ public class FragmentHome extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
+    public void onResume() {
+        super.onResume();
+        adapter = null;
+        layoutManager = null;
     }
 
     private void loadPopularMovies(){
+        Log.d(TAG, "loadPopularMovies");
         GetQueries getQuery = RetrofitObject.getRetrofit().create(GetQueries.class);
 
         call = getQuery.getPopularMovies(1, RetrofitObject.KEY);
@@ -76,12 +88,15 @@ public class FragmentHome extends Fragment {
             @Override
             public void onResponse(Call<Page> call, Response<Page> response) {
                 if (adapter == null){
+                    Log.d(TAG, "Creating new adapter");
                     layoutManager = new LinearLayoutManager(getContext());
                     adapter = new MovieListAdapter(response.body().getResults(), getContext());
                     recyclerViewResults.setLayoutManager(layoutManager);
                     recyclerViewResults.setAdapter(adapter);
                 }
                 else{
+                    Log.d(TAG, "notifyDataSetChanged");
+                    adapter.updateMovies(response.body().getResults());
                     adapter.notifyDataSetChanged();
                 }
 
@@ -107,6 +122,7 @@ public class FragmentHome extends Fragment {
                     adapter = new MovieListAdapter(response.body().getResults(), getContext());
                     recyclerViewResults.setLayoutManager(layoutManager);
                     recyclerViewResults.setAdapter(adapter);
+
                 }
                 else{
                     adapter.updateMovies(response.body().getResults());
