@@ -1,4 +1,4 @@
-package com.example.themoviedb;
+package com.example.themoviedb.Adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-
-import java.util.List;
+import com.example.themoviedb.Classes.Images;
+import com.example.themoviedb.R;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;

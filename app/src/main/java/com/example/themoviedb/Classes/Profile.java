@@ -1,4 +1,4 @@
-package com.example.themoviedb;
+package com.example.themoviedb.Classes;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

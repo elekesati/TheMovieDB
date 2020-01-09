@@ -1,4 +1,7 @@
-package com.example.themoviedb;
+package com.example.themoviedb.Interfaces;
+
+import com.example.themoviedb.Classes.Images;
+import com.example.themoviedb.Classes.Page;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

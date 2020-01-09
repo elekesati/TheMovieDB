@@ -1,4 +1,4 @@
-package com.example.themoviedb;
+package com.example.themoviedb.Fragments;
 
 import android.os.Bundle;
 
@@ -15,6 +15,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.themoviedb.Classes.DatabaseHelper;
+import com.example.themoviedb.Adapters.GalleryAdapter;
+import com.example.themoviedb.Interfaces.GetQueries;
+import com.example.themoviedb.Classes.Images;
+import com.example.themoviedb.Classes.Movie;
+import com.example.themoviedb.Classes.Page;
+import com.example.themoviedb.R;
+import com.example.themoviedb.Adapters.RelatedListAdapter;
+import com.example.themoviedb.Classes.RetrofitObject;
 
 public class FragmentDetails extends Fragment {
     public static final String TAG = "MovieDetails";

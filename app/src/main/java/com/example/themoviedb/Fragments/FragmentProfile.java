@@ -1,4 +1,4 @@
-package com.example.themoviedb;
+package com.example.themoviedb.Fragments;
 
 
 import android.content.Intent;
@@ -20,6 +20,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.themoviedb.Classes.DatabaseHelper;
+import com.example.themoviedb.MainActivity;
+import com.example.themoviedb.Classes.Profile;
+import com.example.themoviedb.R;
 
 import static android.app.Activity.RESULT_OK;
 

@@ -4,6 +4,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.themoviedb.Classes.Movie;
+import com.example.themoviedb.Fragments.FragmentDetails;
+import com.example.themoviedb.Fragments.FragmentFavourites;
+import com.example.themoviedb.Fragments.FragmentHome;
+import com.example.themoviedb.Fragments.FragmentLogin;
+import com.example.themoviedb.Fragments.FragmentProfile;
+import com.example.themoviedb.Fragments.FragmentRegister;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;

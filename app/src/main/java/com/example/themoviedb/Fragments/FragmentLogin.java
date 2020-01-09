@@ -1,4 +1,4 @@
-package com.example.themoviedb;
+package com.example.themoviedb.Fragments;
 
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
@@ -10,6 +10,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.themoviedb.Classes.DatabaseHelper;
+import com.example.themoviedb.MainActivity;
+import com.example.themoviedb.R;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

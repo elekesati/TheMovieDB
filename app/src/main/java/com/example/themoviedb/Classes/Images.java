@@ -1,4 +1,4 @@
-package com.example.themoviedb;
+package com.example.themoviedb.Classes;
 
 import com.google.gson.annotations.SerializedName;
 

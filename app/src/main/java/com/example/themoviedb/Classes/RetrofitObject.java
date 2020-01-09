@@ -1,4 +1,4 @@
-package com.example.themoviedb;
+package com.example.themoviedb.Classes;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

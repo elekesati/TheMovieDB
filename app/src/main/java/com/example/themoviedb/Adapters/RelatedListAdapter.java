@@ -1,4 +1,4 @@
-package com.example.themoviedb;
+package com.example.themoviedb.Adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,6 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.themoviedb.MainActivity;
+import com.example.themoviedb.Classes.Movie;
+import com.example.themoviedb.R;
 
 import java.util.List;
 

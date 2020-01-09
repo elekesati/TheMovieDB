@@ -1,8 +1,7 @@
-package com.example.themoviedb;
+package com.example.themoviedb.Fragments;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,6 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.themoviedb.Interfaces.GetQueries;
+import com.example.themoviedb.MainActivity;
+import com.example.themoviedb.Adapters.MovieListAdapter;
+import com.example.themoviedb.Classes.Page;
+import com.example.themoviedb.R;
+import com.example.themoviedb.Classes.RetrofitObject;
 
 public class FragmentHome extends Fragment {
     private static final String TAG = "MovieHome";
